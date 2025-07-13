@@ -7,7 +7,6 @@ export async function GET(req: Request) {
     const user = await protectedRoute(req)
     if (user instanceof NextResponse) return user
 
-    // Récupérer les posts des utilisateurs suivis
     const result = await query(
       `SELECT p.id, p.content, p.created_at, 
               u.id AS author_id, u.username AS author_username,

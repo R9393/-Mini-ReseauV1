@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
     '/api/users/following'
   ]
 
-  // Vérification des routes protégées
   if (protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
     if (!token) {
       return NextResponse.redirect(new URL('/login', request.url))
@@ -34,14 +33,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Redirection si connecté et sur login/register
   if (['/login', '/register'].includes(request.nextUrl.pathname)) {
     if (token) {
       try {
         await verifyToken(token)
         return NextResponse.redirect(new URL('/feed', request.url))
       } catch (error) {
-        // Token invalide, on laisse passer
       }
     }
   }

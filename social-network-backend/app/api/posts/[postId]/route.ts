@@ -67,7 +67,6 @@ export async function DELETE(req: Request, { params }: { params: { postId: strin
       )
     }
 
-    // Vérifier que l'utilisateur est l'auteur du post
     const postResult = await query(
       'SELECT author_id FROM posts WHERE id = $1',
       [postId]

@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return new NextResponse('Username and password required', { status: 400 })
     }
 
-    // Vérification de l'existence de l'utilisateur
+
     const existingUser = await query(
       'SELECT * FROM users WHERE username = $1',
       [username]
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       return new NextResponse('Username already exists', { status: 400 })
     }
 
-    // Création de l'utilisateur
+
     const hashedPassword = await hashPassword(password)
     const newUser = await query(
       `INSERT INTO users (username, password, bio) 
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const user = newUser.rows[0]
     const token = generateToken(user.id)
 
-    // Réponse avec cookie
+
     const response = NextResponse.json(user, { status: 201 })
     response.cookies.set({
       name: 'token',
@@ -41,7 +41,8 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 // 1 jour
+      maxAge: 60 * 60 * 24 
+      
     })
 
     return response

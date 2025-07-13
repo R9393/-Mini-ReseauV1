@@ -9,7 +9,6 @@ export async function GET(req: Request, { params }: { params: { username: string
 
     const username = params.username
 
-    // Récupérer les informations de base de l'utilisateur
     const userResult = await query(
       `SELECT id, username, bio, created_at 
        FROM users 
@@ -26,7 +25,6 @@ export async function GET(req: Request, { params }: { params: { username: string
     
     const user = userResult.rows[0]
 
-    // Récupérer les posts de l'utilisateur
     const postsResult = await query(
       `SELECT id, content, created_at 
        FROM posts 
@@ -38,7 +36,6 @@ export async function GET(req: Request, { params }: { params: { username: string
     
     const posts = postsResult.rows
 
-    // Récupérer les stats de suivi
     const followersResult = await query(
       'SELECT COUNT(*) FROM follows WHERE following_id = $1',
       [user.id]
@@ -49,7 +46,6 @@ export async function GET(req: Request, { params }: { params: { username: string
       [user.id]
     )
     
-    // Vérifier si l'utilisateur connecté suit cet utilisateur
     let isFollowing = false
     
     if (!(currentUser instanceof NextResponse)) {

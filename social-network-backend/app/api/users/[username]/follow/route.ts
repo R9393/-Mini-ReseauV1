@@ -9,7 +9,6 @@ export async function POST(req: Request, { params }: { params: { username: strin
 
     const username = params.username
 
-    // Ne pas se suivre soi-même
     if (currentUser.username === username) {
       return NextResponse.json(
         { error: 'Cannot follow yourself' },
@@ -17,7 +16,7 @@ export async function POST(req: Request, { params }: { params: { username: strin
       )
     }
 
-    // Récupérer l'utilisateur à suivre
+
     const userResult = await query(
       'SELECT id FROM users WHERE username = $1',
       [username]
@@ -32,7 +31,7 @@ export async function POST(req: Request, { params }: { params: { username: strin
     
     const userToFollow = userResult.rows[0]
 
-    // Vérifier si on suit déjà
+
     const followCheck = await query(
       'SELECT 1 FROM follows WHERE follower_id = $1 AND following_id = $2',
       [currentUser.id, userToFollow.id]
@@ -45,7 +44,7 @@ export async function POST(req: Request, { params }: { params: { username: strin
       )
     }
 
-    // Créer le suivi
+
     await query(
       'INSERT INTO follows (follower_id, following_id) VALUES ($1, $2)',
       [currentUser.id, userToFollow.id]
@@ -71,7 +70,8 @@ export async function DELETE(req: Request, { params }: { params: { username: str
 
     const username = params.username
 
-    // Récupérer l'utilisateur à ne plus suivre
+
+
     const userResult = await query(
       'SELECT id FROM users WHERE username = $1',
       [username]
@@ -86,7 +86,7 @@ export async function DELETE(req: Request, { params }: { params: { username: str
     
     const userToUnfollow = userResult.rows[0]
 
-    // Supprimer le suivi
+
     const result = await query(
       'DELETE FROM follows WHERE follower_id = $1 AND following_id = $2',
       [currentUser.id, userToUnfollow.id]
